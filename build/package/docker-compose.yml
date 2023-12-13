@@ -1,0 +1,41 @@
+version: '1'
+name: band-backend
+services:
+  bandDB-mysql:
+    image: mysql
+    networks:
+      band_backend:
+        aliases:
+          - database
+    environment:
+      MYSQL_DATABASE: bandDB
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+
+  migrate:
+    image: migrate/migrate
+    networks:
+      - band_backend
+    volumes:
+      - ../../infra/database/migration:/migration
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+        window: 120s
+    command:
+      [
+        "-path",
+        "/migration",
+        "-database",
+        "mysql://root:root@tcp(database:3306)/bandDB",
+        "up",
+        "3"
+      ]
+    depends_on:
+      - bandDB-mysql
+
+networks:
+  band_backend:
