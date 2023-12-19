@@ -4,6 +4,7 @@ go 1.21.4
 
 require (
 	github.com/go-chi/chi v1.5.5
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/spf13/viper v1.18.1
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/crypto v0.16.0

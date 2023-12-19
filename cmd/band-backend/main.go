@@ -4,13 +4,21 @@ import (
 	"net/http"
 
 	"github.com/bands-backend/config"
+	"github.com/bands-backend/infra/database"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
 
 func main() {
 	cfg := config.LoadConfig()
-	println(cfg)
+
+	db := database.OpenConnection(
+		cfg.DBHost,
+		cfg.DBPassword,
+		cfg.DBHost,
+		cfg.DBName,
+		cfg.WebServerPort,
+	)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
