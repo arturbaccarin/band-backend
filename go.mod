@@ -1,4 +1,4 @@
-module github.com/arturbaccarin/bands-backend
+module github.com/arturbaccarin/band-backend
 
 go 1.21.4
 
