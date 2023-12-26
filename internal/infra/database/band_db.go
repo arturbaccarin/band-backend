@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 
-	"github.com/bands-backend/internal/entity"
+	"github.com/arturbaccarin/bands-backend/internal/entity"
 )
 
 type Band struct {

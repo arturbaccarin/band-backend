@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/bands-backend/config"
-	"github.com/bands-backend/infra/database"
+	"github.com/arturbaccarin/bands-backend/config"
+	"github.com/arturbaccarin/bands-backend/internal/infra/database"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
