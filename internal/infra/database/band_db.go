@@ -16,7 +16,7 @@ func NewBand(db *sql.DB) *Band {
 	}
 }
 
-func (b Band) SelectByID(ID int) (entity.Band, error) {
+func (b Band) SelectByID(ID uint) (entity.Band, error) {
 	var band entity.Band
 
 	query := `
@@ -38,13 +38,13 @@ func (b Band) SelectByID(ID int) (entity.Band, error) {
 	return band, nil
 }
 
-func (b Band) Create(name string, year int) error {
+func (b Band) Create(band entity.Band) error {
 	query := `
 		INSERT INTO band (name, year) 
 		VALUES (?, ?);
 	`
 
-	_, err := b.DB.Exec(query, name, year)
+	_, err := b.DB.Exec(query, band.Name, band.Year)
 	if err != nil {
 		return err
 	}
