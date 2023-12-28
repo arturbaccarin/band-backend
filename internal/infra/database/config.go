@@ -6,8 +6,8 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-func OpenConnection(dbUser, dbPass, dbHost, dbName, webServerPort string) *sql.DB {
-	dbAddress := dbHost + ":" + webServerPort
+func OpenConnection(dbUser, dbPass, dbHost, dbName, dbPort string) *sql.DB {
+	dbAddress := dbHost + ":" + dbPort
 
 	cfg := mysql.Config{
 		User:   dbUser,
