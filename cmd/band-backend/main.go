@@ -14,11 +14,11 @@ func main() {
 	cfg := config.LoadConfig()
 
 	db := database.OpenConnection(
-		cfg.DBHost,
+		cfg.DBUser,
 		cfg.DBPassword,
 		cfg.DBHost,
 		cfg.DBName,
-		cfg.WebServerPort,
+		cfg.DBPort,
 	)
 
 	bandDB := database.NewBand(db)
@@ -31,8 +31,10 @@ func main() {
 		w.Write([]byte("pong"))
 	})
 
-	apiRouter := chi.NewRouter()
-	apiRouter.Post("/products", bandHandler.Create)
+	r.Route("/bands", func(r chi.Router) {
+		r.Post("/", bandHandler.Create)
+		r.Get("/{ID}", bandHandler.GetByID)
+	})
 
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":8000", r)
 }
