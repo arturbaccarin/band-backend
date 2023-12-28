@@ -1,4 +1,4 @@
-version: '2.10'
+version: '3'
 name: band-backend
 services:
   bandDB-mysql:
@@ -18,12 +18,12 @@ services:
     networks:
       - band_backend
     volumes:
-      - ../../infra/database/migration:/migration
+      - ../../internal/infra/database/migration:/migration
     deploy:
       restart_policy:
         condition: on-failure
         delay: 10s
-        max_attempts: 5
+        max_attempts: 10
         window: 120s
     command:
       [
