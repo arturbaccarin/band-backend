@@ -16,7 +16,7 @@ func NewBand(db *sql.DB) *Band {
 	}
 }
 
-func (b Band) SelectByID(ID uint) (entity.Band, error) {
+func (b Band) SelectByID(ID string) (entity.Band, error) {
 	var band entity.Band
 
 	query := `
