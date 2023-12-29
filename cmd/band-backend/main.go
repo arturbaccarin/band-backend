@@ -34,6 +34,7 @@ func main() {
 	r.Route("/bands", func(r chi.Router) {
 		r.Post("/", bandHandler.Create)
 		r.Get("/{ID}", bandHandler.GetByID)
+		r.Delete("/{ID}", bandHandler.DeleteByID)
 	})
 
 	http.ListenAndServe(":8000", r)

@@ -56,13 +56,27 @@ func (h *BandHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	band, err := h.BandDB.SelectByID(ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
 	}
 
 	if band.ID == 0 {
 		w.WriteHeader(http.StatusNoContent)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(band)
+}
+
+func (h *BandHandler) DeleteByID(w http.ResponseWriter, r *http.Request) {
+	ID := chi.URLParam(r, "ID")
+
+	err := h.BandDB.DeleteByID(ID)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }

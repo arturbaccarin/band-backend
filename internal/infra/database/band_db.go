@@ -51,3 +51,17 @@ func (b Band) Create(band entity.Band) error {
 
 	return nil
 }
+
+func (b Band) DeleteByID(ID string) error {
+	query := `
+		DELETE FROM band
+		WHERE id = ?
+	`
+
+	_, err := b.DB.Exec(query, ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
