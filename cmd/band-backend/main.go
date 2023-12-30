@@ -4,12 +4,26 @@ import (
 	"net/http"
 
 	"github.com/arturbaccarin/band-backend/config"
+	_ "github.com/arturbaccarin/band-backend/docs"
 	"github.com/arturbaccarin/band-backend/internal/infra/database"
 	"github.com/arturbaccarin/band-backend/webserver/handler"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
+//	@title			API Band
+//	@version		1.0
+//	@description	Band API for my personal project
+//	@termsOfService	http://swagger.io/terms/
+
+//	@contact.name	Artur Baccarin
+
+// @host						localhost:8000
+// @BasePath					/
+// @securityDefinitions.apikey	ApiKeyAuth
+// @in							header
+// @name						Authorization
 func main() {
 	cfg := config.LoadConfig()
 
@@ -30,6 +44,8 @@ func main() {
 	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("pong"))
 	})
+
+	r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL("http://localhost:8000/swagger/index.html")))
 
 	r.Route("/bands", func(r chi.Router) {
 		r.Post("/", bandHandler.Create)

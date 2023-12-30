@@ -1,0 +1,16 @@
+basePath: /
+host: localhost:8000
+info:
+  contact:
+    name: Artur Baccarin
+  description: Band API for my personal project
+  termsOfService: http://swagger.io/terms/
+  title: API Band
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
