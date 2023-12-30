@@ -24,6 +24,17 @@ func NewBandHandler(bandDB database.BandInterface) *BandHandler {
 	}
 }
 
+// Create Band godoc
+// @Summary      Create band
+// @Description  Create bands
+// @Tags         bands
+// @Accept       json
+// @Produce      json
+// @Param        request     body      dto.CreateBandParams  true  "band request"
+// @Success      201
+// @Failure      500         {object}  Error
+// @Router       /bands [post]
+// @Security ApiKeyAuth
 func (h *BandHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var createBandParams dto.CreateBandParams
 
