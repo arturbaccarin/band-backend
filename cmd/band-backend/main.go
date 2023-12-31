@@ -6,7 +6,7 @@ import (
 	"github.com/arturbaccarin/band-backend/config"
 	_ "github.com/arturbaccarin/band-backend/docs"
 	"github.com/arturbaccarin/band-backend/internal/infra/database"
-	"github.com/arturbaccarin/band-backend/webserver/handler"
+	"github.com/arturbaccarin/band-backend/internal/infra/webserver/handler"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	httpSwagger "github.com/swaggo/http-swagger"
