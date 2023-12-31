@@ -30,8 +30,9 @@ func NewBandHandler(bandDB database.BandInterface) *BandHandler {
 // @Tags         bands
 // @Accept       json
 // @Produce      json
+// @Param        request     body      dto.CreateBandParams  true  "band request"
 // @Success      201
-// @Failure      500     {object}  Error
+// @Failure      500     {object}  ErrorResponse
 // @Router       /bands [post]
 // @Security ApiKeyAuth
 func (h *BandHandler) Create(w http.ResponseWriter, r *http.Request) {

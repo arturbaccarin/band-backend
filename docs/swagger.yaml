@@ -1,4 +1,12 @@
 basePath: /
+definitions:
+  dto.CreateBandParams:
+    properties:
+      name:
+        type: string
+      year:
+        type: integer
+    type: object
 host: localhost:8000
 info:
   contact:
@@ -7,7 +15,29 @@ info:
   termsOfService: http://swagger.io/terms/
   title: API Band
   version: "1.0"
-paths: {}
+paths:
+  /bands:
+    post:
+      consumes:
+      - application/json
+      description: Create bands
+      parameters:
+      - description: band request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateBandParams'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+      security:
+      - ApiKeyAuth: []
+      summary: Create band
+      tags:
+      - bands
 securityDefinitions:
   ApiKeyAuth:
     in: header
