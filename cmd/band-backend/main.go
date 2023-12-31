@@ -45,7 +45,7 @@ func main() {
 		w.Write([]byte("pong"))
 	})
 
-	r.Get("/swagger/*", httpSwagger.Handler(httpSwagger.URL("http://localhost:8000/swagger/index.html")))
+	r.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL("http://localhost:8000/docs/doc.json")))
 
 	r.Route("/bands", func(r chi.Router) {
 		r.Post("/", bandHandler.Create)
