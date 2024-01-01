@@ -7,6 +7,20 @@ definitions:
       year:
         type: integer
     type: object
+  entity.Band:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      year:
+        type: integer
+    type: object
+  handler.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
 host: localhost:8000
 info:
   contact:
@@ -20,7 +34,6 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create bands
       parameters:
       - description: band request
         in: body
@@ -33,11 +46,68 @@ paths:
       responses:
         "201":
           description: Created
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
       security:
       - ApiKeyAuth: []
-      summary: Create band
+      summary: Create a band
       tags:
-      - bands
+      - band
+  /bands/{ID}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: band ID
+        in: path
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a band
+      tags:
+      - band
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: band ID
+        in: path
+        name: ID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Band'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a band
+      tags:
+      - band
 securityDefinitions:
   ApiKeyAuth:
     in: header

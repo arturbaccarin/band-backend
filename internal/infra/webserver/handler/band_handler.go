@@ -24,10 +24,9 @@ func NewBandHandler(bandDB database.BandInterface) *BandHandler {
 	}
 }
 
-// Create Band godoc
-// @Summary      Create band
-// @Description  Create bands
-// @Tags         bands
+// Create godoc
+// @Summary      Create a band
+// @Tags         band
 // @Accept       json
 // @Produce      json
 // @Param        request     body      dto.CreateBandParams  true  "band request"
@@ -62,6 +61,17 @@ func (h *BandHandler) Create(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// GetByID godoc
+// @Summary      Get a band
+// @Tags         band
+// @Accept       json
+// @Produce      json
+// @Param        ID   path      int  true  "band ID"
+// @Success      200  {object}  entity.Band
+// @Failure      404
+// @Failure      500  {object}  ErrorResponse
+// @Router       /bands/{ID} [get]
+// @Security ApiKeyAuth
 func (h *BandHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	ID := chi.URLParam(r, "ID")
 	band, err := h.BandDB.SelectByID(ID)
@@ -80,6 +90,17 @@ func (h *BandHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(band)
 }
 
+// DeleteByID godoc
+// @Summary      Delete a band
+// @Tags         band
+// @Accept       json
+// @Produce      json
+// @Param        ID        path      string                  true  "band ID"
+// @Success      204
+// @Failure      404
+// @Failure      500       {object}  ErrorResponse
+// @Router       /bands/{ID} [delete]
+// @Security ApiKeyAuth
 func (h *BandHandler) DeleteByID(w http.ResponseWriter, r *http.Request) {
 	ID := chi.URLParam(r, "ID")
 
