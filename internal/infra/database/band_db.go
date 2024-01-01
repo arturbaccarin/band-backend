@@ -69,11 +69,11 @@ func (b Band) DeleteByID(ID string) error {
 func (b Band) UpdateByID(ID string, band entity.Band) error {
 	query := `
 		UPDATE band
-		SET name = ? AND year = ?
+		SET name = ?, year = ?
 		WHERE id = ?;
 	`
 
-	_, err := b.DB.Exec(query, band.Name, band.Year)
+	_, err := b.DB.Exec(query, band.Name, band.Year, ID)
 	if err != nil {
 		return err
 	}

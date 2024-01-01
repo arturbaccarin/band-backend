@@ -51,6 +51,7 @@ func main() {
 		r.Post("/", bandHandler.Create)
 		r.Get("/{ID}", bandHandler.GetByID)
 		r.Delete("/{ID}", bandHandler.DeleteByID)
+		r.Put("/{ID}", bandHandler.UpdateByID)
 	})
 
 	http.ListenAndServe(":8000", r)
