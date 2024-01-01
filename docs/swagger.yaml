@@ -7,6 +7,13 @@ definitions:
       year:
         type: integer
     type: object
+  dto.UpdateBandParams:
+    properties:
+      name:
+        type: string
+      year:
+        type: integer
+    type: object
   entity.Band:
     properties:
       id:
@@ -106,6 +113,37 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get a band
+      tags:
+      - band
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: band ID
+        in: path
+        name: ID
+        required: true
+        type: string
+      - description: band request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateBandParams'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update a band
       tags:
       - band
 securityDefinitions:

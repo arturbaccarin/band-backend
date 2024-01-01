@@ -25,15 +25,16 @@ func NewBandHandler(bandDB database.BandInterface) *BandHandler {
 }
 
 // Create godoc
-// @Summary      Create a band
-// @Tags         band
-// @Accept       json
-// @Produce      json
-// @Param        request     body      dto.CreateBandParams  true  "band request"
-// @Success      201
-// @Failure      500     {object}  ErrorResponse
-// @Router       /bands [post]
-// @Security ApiKeyAuth
+//
+//	@Summary	Create a band
+//	@Tags		band
+//	@Accept		json
+//	@Produce	json
+//	@Param		request	body	dto.CreateBandParams	true	"band request"
+//	@Success	201
+//	@Failure	500	{object}	ErrorResponse
+//	@Router		/bands [post]
+//	@Security	ApiKeyAuth
 func (h *BandHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var createBandParams dto.CreateBandParams
 
@@ -62,18 +63,20 @@ func (h *BandHandler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetByID godoc
-// @Summary      Get a band
-// @Tags         band
-// @Accept       json
-// @Produce      json
-// @Param        ID   path      int  true  "band ID"
-// @Success      200  {object}  entity.Band
-// @Failure      404
-// @Failure      500  {object}  ErrorResponse
-// @Router       /bands/{ID} [get]
-// @Security ApiKeyAuth
+//
+//	@Summary	Get a band
+//	@Tags		band
+//	@Accept		json
+//	@Produce	json
+//	@Param		ID	path		int	true	"band ID"
+//	@Success	200	{object}	entity.Band
+//	@Failure	404
+//	@Failure	500	{object}	ErrorResponse
+//	@Router		/bands/{ID} [get]
+//	@Security	ApiKeyAuth
 func (h *BandHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	ID := chi.URLParam(r, "ID")
+
 	band, err := h.BandDB.SelectByID(ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -91,16 +94,17 @@ func (h *BandHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeleteByID godoc
-// @Summary      Delete a band
-// @Tags         band
-// @Accept       json
-// @Produce      json
-// @Param        ID        path      string                  true  "band ID"
-// @Success      204
-// @Failure      404
-// @Failure      500       {object}  ErrorResponse
-// @Router       /bands/{ID} [delete]
-// @Security ApiKeyAuth
+//
+//	@Summary	Delete a band
+//	@Tags		band
+//	@Accept		json
+//	@Produce	json
+//	@Param		ID	path	string	true	"band ID"
+//	@Success	204
+//	@Failure	404
+//	@Failure	500	{object}	ErrorResponse
+//	@Router		/bands/{ID} [delete]
+//	@Security	ApiKeyAuth
 func (h *BandHandler) DeleteByID(w http.ResponseWriter, r *http.Request) {
 	ID := chi.URLParam(r, "ID")
 
@@ -111,4 +115,46 @@ func (h *BandHandler) DeleteByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// UpdateByID godoc
+//
+//	@Summary	Update a band
+//	@Tags		band
+//	@Accept		json
+//	@Produce	json
+//	@Param		ID		path	string					true	"band ID"
+//	@Param		request	body	dto.UpdateBandParams	true	"band request"
+//	@Success	204
+//	@Failure	404
+//	@Failure	500	{object}	ErrorResponse
+//	@Router		/bands/{ID} [put]
+//	@Security	ApiKeyAuth
+func (h *BandHandler) UpdateByID(w http.ResponseWriter, r *http.Request) {
+	var updateBandParams dto.UpdateBandParams
+
+	ID := chi.URLParam(r, "ID")
+
+	err := json.NewDecoder(r.Body).Decode(&updateBandParams)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	band, err := entity.NewBand(updateBandParams.Name, updateBandParams.Year)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	err = h.BandDB.UpdateByID(ID, *band)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
 }

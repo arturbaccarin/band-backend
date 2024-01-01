@@ -55,10 +55,25 @@ func (b Band) Create(band entity.Band) error {
 func (b Band) DeleteByID(ID string) error {
 	query := `
 		DELETE FROM band
-		WHERE id = ?
+		WHERE id = ?;
 	`
 
 	_, err := b.DB.Exec(query, ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (b Band) UpdateByID(ID string, band entity.Band) error {
+	query := `
+		UPDATE band
+		SET name = ? AND year = ?
+		WHERE id = ?;
+	`
+
+	_, err := b.DB.Exec(query, band.Name, band.Year)
 	if err != nil {
 		return err
 	}
