@@ -52,6 +52,7 @@ func main() {
 		r.Get("/{ID}", bandHandler.GetByID)
 		r.Delete("/{ID}", bandHandler.DeleteByID)
 		r.Put("/{ID}", bandHandler.UpdateByID)
+		r.Get("/", bandHandler.GetList)
 	})
 
 	http.ListenAndServe(":8000", r)

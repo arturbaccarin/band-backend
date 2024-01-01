@@ -7,4 +7,5 @@ type BandInterface interface {
 	SelectByID(string) (entity.Band, error)
 	DeleteByID(string) error
 	UpdateByID(string, entity.Band) error
+	GetList(int) ([]entity.Band, error)
 }

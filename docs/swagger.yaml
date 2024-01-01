@@ -38,6 +38,34 @@ info:
   version: "1.0"
 paths:
   /bands:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.Band'
+            type: array
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a list of bands
+      tags:
+      - band
     post:
       consumes:
       - application/json

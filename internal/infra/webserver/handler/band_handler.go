@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/arturbaccarin/band-backend/internal/dto"
 	"github.com/arturbaccarin/band-backend/internal/entity"
@@ -157,4 +158,37 @@ func (h *BandHandler) UpdateByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// GetList godoc
+//
+//	@Summary	Get a list of bands
+//	@Tags		band
+//	@Accept		json
+//	@Produce	json
+//	@Param		page	query		string	false	"page number"
+//	@Success	200		{object}	[]entity.Band
+//	@Failure	404
+//	@Failure	500	{object}	ErrorResponse
+//	@Router		/bands [get]
+//	@Security	ApiKeyAuth
+func (h *BandHandler) GetList(w http.ResponseWriter, r *http.Request) {
+	page := r.URL.Query().Get("page")
+
+	pageInt, err := strconv.Atoi(page)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	bands, err := h.BandDB.GetList(pageInt)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(bands)
 }

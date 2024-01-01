@@ -80,3 +80,37 @@ func (b Band) UpdateByID(ID string, band entity.Band) error {
 
 	return nil
 }
+
+func (b Band) GetList(page int) ([]entity.Band, error) {
+	var bands []entity.Band
+
+	query := `
+		SELECT 
+			*
+		FROM
+			band
+		LIMIT 5
+		OFFSET ?;
+	`
+
+	offset := 5 * (page - 1)
+
+	rows, err := b.DB.Query(query, offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var band entity.Band
+
+		err := rows.Scan(&band.ID, &band.Name, &band.Year)
+		if err != nil {
+			return nil, err
+		}
+
+		bands = append(bands, band)
+	}
+
+	return bands, nil
+}
