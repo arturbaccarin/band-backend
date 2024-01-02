@@ -38,6 +38,9 @@ func main() {
 	bandDB := database.NewBand(db)
 	bandHandler := handler.NewBandHandler(bandDB)
 
+	userDB := database.NewUser(db)
+	userHandler := handler.NewUserHander(userDB)
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
@@ -53,6 +56,10 @@ func main() {
 		r.Delete("/{ID}", bandHandler.DeleteByID)
 		r.Put("/{ID}", bandHandler.UpdateByID)
 		r.Get("/", bandHandler.GetList)
+	})
+
+	r.Route("/users", func(r chi.Router) {
+		r.Post("/", userHandler.Create)
 	})
 
 	http.ListenAndServe(":8000", r)

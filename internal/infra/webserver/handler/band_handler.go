@@ -15,10 +15,6 @@ type BandHandler struct {
 	BandDB database.BandInterface
 }
 
-type ErrorResponse struct {
-	Error string `json:"error"`
-}
-
 func NewBandHandler(bandDB database.BandInterface) *BandHandler {
 	return &BandHandler{
 		BandDB: bandDB,
