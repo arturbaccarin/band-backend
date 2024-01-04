@@ -12,4 +12,5 @@ type BandInterface interface {
 
 type UserInterface interface {
 	Create(user entity.User) error
+	FindByEmail(email, password string) (entity.User, error)
 }

@@ -29,3 +29,25 @@ func (u User) Create(user entity.User) error {
 
 	return nil
 }
+
+func (u User) FindByEmail(email string) (entity.User, error) {
+	var user entity.User
+
+	query := `
+		SELECT 
+			*
+		FROM
+			user
+		WHERE
+			email = ?;
+	`
+
+	row := u.DB.QueryRow(query, email)
+
+	err := row.Scan(&user)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}

@@ -56,3 +56,25 @@ func (u UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 }
+
+func (u UserHandler) SignIn(w http.ResponseWriter, r *http.Request) {
+	var signInParams dto.SignInParams
+
+	err := json.NewDecoder(r.Body).Decode(&signInParams)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	user, err := u.UserDB.FindByEmail(signInParams.Email, signInParams.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	if !user.ValidatePassword(signInParams.Password) {
+
+	}
+}
