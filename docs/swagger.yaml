@@ -7,6 +7,15 @@ definitions:
       year:
         type: integer
     type: object
+  dto.CreateUserParams:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
   dto.UpdateBandParams:
     properties:
       name:
@@ -174,6 +183,31 @@ paths:
       summary: Update a band
       tags:
       - band
+  /users:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserParams'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create an user
+      tags:
+      - user
 securityDefinitions:
   ApiKeyAuth:
     in: header

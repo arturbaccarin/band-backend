@@ -19,6 +19,17 @@ func NewUserHander(userDB database.UserInterface) *UserHandler {
 	}
 }
 
+// Create godoc
+//
+//	@Summary	Create an user
+//	@Tags		user
+//	@Accept		json
+//	@Produce	json
+//	@Param		request	body	dto.CreateUserParams	true	"user request"
+//	@Success	201
+//	@Failure	500	{object}	ErrorResponse
+//	@Router		/users [post]
+//	@Security	ApiKeyAuth
 func (u UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var createUserParams dto.CreateUserParams
 
