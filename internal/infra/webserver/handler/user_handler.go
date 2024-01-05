@@ -2,12 +2,15 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/arturbaccarin/band-backend/internal/dto"
 	"github.com/arturbaccarin/band-backend/internal/entity"
 	"github.com/arturbaccarin/band-backend/internal/infra/database"
 )
+
+var ErrWrongPassword = errors.New("user or password is invalid")
 
 type UserHandler struct {
 	UserDB database.UserInterface
@@ -67,7 +70,7 @@ func (u UserHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := u.UserDB.FindByEmail(signInParams.Email, signInParams.Password)
+	user, err := u.UserDB.FindByEmail(signInParams.Email)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
@@ -75,6 +78,10 @@ func (u UserHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !user.ValidatePassword(signInParams.Password) {
-
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: ErrWrongPassword.Error()})
+		return
 	}
+
+	w.Write([]byte{'O', 'k'})
 }

@@ -44,7 +44,7 @@ func (u User) FindByEmail(email string) (entity.User, error) {
 
 	row := u.DB.QueryRow(query, email)
 
-	err := row.Scan(&user)
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
 	if err != nil {
 		return user, err
 	}

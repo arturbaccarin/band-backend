@@ -62,5 +62,7 @@ func main() {
 		r.Post("/", userHandler.Create)
 	})
 
+	r.Post("/signin", userHandler.SignIn)
+
 	http.ListenAndServe(":8000", r)
 }
