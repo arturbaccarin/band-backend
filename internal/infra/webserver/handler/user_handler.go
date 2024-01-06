@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/arturbaccarin/band-backend/internal/dto"
 	"github.com/arturbaccarin/band-backend/internal/entity"
 	"github.com/arturbaccarin/band-backend/internal/infra/database"
+	"github.com/arturbaccarin/band-backend/pkg/auth"
 )
 
 var ErrWrongPassword = errors.New("user or password is invalid")
@@ -83,5 +85,18 @@ func (u UserHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte{'O', 'k'})
+	sub := strconv.FormatUint(uint64(user.ID), 10)
+
+	tokenString, err := auth.GenerateJWT(sub)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	accessToken := dto.GetJWTOutput{AccessToken: tokenString}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(accessToken)
 }
