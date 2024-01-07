@@ -2,20 +2,21 @@ package auth
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
 
 var cfg *AuthConfig
+var secretKey []byte
 
 func init() {
 	cfg = LoadConfig()
+	secretKey = []byte(cfg.JWTSecretKey)
 }
 
 func GenerateJWT(sub string) (string, error) {
-	secretKey := []byte(cfg.JWTSecretKey)
-
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"sub": sub,
@@ -31,8 +32,10 @@ func GenerateJWT(sub string) (string, error) {
 }
 
 func ValidateJWT(tokenString string) error {
+	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
+
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return "", nil
+		return secretKey, nil
 	})
 
 	if err != nil {

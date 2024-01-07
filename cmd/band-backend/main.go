@@ -6,6 +6,7 @@ import (
 	"github.com/arturbaccarin/band-backend/config"
 	_ "github.com/arturbaccarin/band-backend/docs"
 	"github.com/arturbaccarin/band-backend/internal/infra/database"
+	"github.com/arturbaccarin/band-backend/internal/infra/webserver"
 	"github.com/arturbaccarin/band-backend/internal/infra/webserver/handler"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -51,6 +52,7 @@ func main() {
 	r.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL("http://localhost:8000/docs/doc.json")))
 
 	r.Route("/bands", func(r chi.Router) {
+		r.Use(webserver.JWTAuthenticator)
 		r.Post("/", bandHandler.Create)
 		r.Get("/{ID}", bandHandler.GetByID)
 		r.Delete("/{ID}", bandHandler.DeleteByID)
