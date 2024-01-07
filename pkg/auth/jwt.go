@@ -3,7 +3,7 @@ package auth
 import (
 	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/go-chi/jwtauth"
 )
 
 var cfg *AuthConfig
@@ -14,17 +14,12 @@ func init() {
 
 func GenerateJWT(sub string) (string, error) {
 	secretKey := []byte(cfg.JWTSecretKey)
+	tokenAuth := jwtauth.New("HS256", []byte(secretKey), nil)
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
-		jwt.MapClaims{
-			"sub": sub,
-			"exp": time.Now().Add(time.Duration(cfg.JWTExpiresIn) * time.Second).Unix(),
-		})
-
-	tokenString, err := token.SignedString(secretKey)
-	if err != nil {
-		return "", err
-	}
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{
+		"sub": sub,
+		"exp": time.Now().Add(time.Duration(cfg.JWTExpiresIn) * time.Second).Unix(),
+	})
 
 	return tokenString, nil
 }
