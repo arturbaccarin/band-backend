@@ -16,6 +16,18 @@ definitions:
       password:
         type: string
     type: object
+  dto.GetJWTOutput:
+    properties:
+      access_token:
+        type: string
+    type: object
+  dto.SignInParams:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
   dto.UpdateBandParams:
     properties:
       name:
@@ -203,9 +215,32 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handler.ErrorResponse'
-      security:
-      - ApiKeyAuth: []
       summary: Create an user
+      tags:
+      - user
+  /users/signin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: sign in params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SignInParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetJWTOutput'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: SignIn
       tags:
       - user
 securityDefinitions:

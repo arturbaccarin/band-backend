@@ -62,9 +62,8 @@ func main() {
 
 	r.Route("/users", func(r chi.Router) {
 		r.Post("/", userHandler.Create)
+		r.Post("/signin", userHandler.SignIn)
 	})
-
-	r.Post("/signin", userHandler.SignIn)
 
 	http.ListenAndServe(":8000", r)
 }

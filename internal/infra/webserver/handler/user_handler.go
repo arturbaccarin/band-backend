@@ -34,7 +34,6 @@ func NewUserHander(userDB database.UserInterface) *UserHandler {
 //	@Success	201
 //	@Failure	500	{object}	ErrorResponse
 //	@Router		/users [post]
-//	@Security	ApiKeyAuth
 func (u UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var createUserParams dto.CreateUserParams
 
@@ -62,6 +61,16 @@ func (u UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// Create godoc
+//
+//	@Summary	SignIn
+//	@Tags		user
+//	@Accept		json
+//	@Produce	json
+//	@Param		request	body	dto.SignInParams	true	"sign in params"
+//	@Success      200  {object}  dto.GetJWTOutput
+//	@Failure	500	{object}	ErrorResponse
+//	@Router		/users/signin [post]
 func (u UserHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 	var signInParams dto.SignInParams
 
