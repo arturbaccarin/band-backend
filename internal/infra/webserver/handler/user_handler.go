@@ -39,22 +39,19 @@ func (u UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&createUserParams)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		ErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
 	user, err := entity.NewUser(createUserParams.Name, createUserParams.Email, createUserParams.Password)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		ErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
 	err = u.UserDB.Create(*user)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		ErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -76,21 +73,18 @@ func (u UserHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&signInParams)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		ErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
 	user, err := u.UserDB.FindByEmail(signInParams.Email)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		ErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
 	if !user.ValidatePassword(signInParams.Password) {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(ErrorResponse{Error: ErrWrongPassword.Error()})
+		ErrorResponse(w, http.StatusBadRequest, ErrWrongPassword)
 		return
 	}
 
@@ -98,8 +92,7 @@ func (u UserHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 
 	tokenString, err := auth.GenerateJWT(sub)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+		ErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
