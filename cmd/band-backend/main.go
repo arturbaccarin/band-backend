@@ -46,7 +46,10 @@ func main() {
 	r.Use(middleware.Logger)
 
 	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("pong"))
+		_, err := w.Write([]byte("pong"))
+		if err != nil {
+			panic(err)
+		}
 	})
 
 	r.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL("http://localhost:8000/docs/doc.json")))
@@ -65,5 +68,8 @@ func main() {
 		r.Post("/signin", userHandler.SignIn)
 	})
 
-	http.ListenAndServe(":8000", r)
+	err := http.ListenAndServe(":8000", r)
+	if err != nil {
+		panic(err)
+	}
 }

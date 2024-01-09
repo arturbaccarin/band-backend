@@ -84,7 +84,11 @@ func (h *BandHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(band)
+	err = json.NewEncoder(w).Encode(band)
+	if err != nil {
+		ErrorResponse(w, http.StatusBadRequest, err)
+		return
+	}
 }
 
 // DeleteByID godoc
@@ -178,5 +182,9 @@ func (h *BandHandler) GetList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(bands)
+	err = json.NewEncoder(w).Encode(bands)
+	if err != nil {
+		ErrorResponse(w, http.StatusBadRequest, err)
+		return
+	}
 }

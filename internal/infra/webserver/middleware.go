@@ -13,7 +13,11 @@ func JWTAuthenticator(next http.Handler) http.Handler {
 		err := auth.ValidateJWT(tokenString)
 		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
-			w.Write([]byte(err.Error()))
+			_, err := w.Write([]byte(err.Error()))
+			if err != nil {
+				panic(err)
+			}
+
 			return
 		}
 
