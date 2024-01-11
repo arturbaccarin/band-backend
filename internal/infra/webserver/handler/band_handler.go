@@ -37,19 +37,19 @@ func (h *BandHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&createBandParams)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	band, err := entity.NewBand(createBandParams.Name, createBandParams.Year)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = h.BandDB.Create(*band)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -73,12 +73,12 @@ func (h *BandHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 
 	band, err := h.BandDB.SelectByID(ID)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if band.ID == 0 {
-		ErrorResponse(w, http.StatusNoContent, err)
+		http.Error(w, "not found", http.StatusNoContent)
 		return
 	}
 
@@ -86,7 +86,7 @@ func (h *BandHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(band)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 }
@@ -108,7 +108,7 @@ func (h *BandHandler) DeleteByID(w http.ResponseWriter, r *http.Request) {
 
 	err := h.BandDB.DeleteByID(ID)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -135,19 +135,19 @@ func (h *BandHandler) UpdateByID(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&updateBandParams)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	band, err := entity.NewBand(updateBandParams.Name, updateBandParams.Year)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = h.BandDB.UpdateByID(ID, *band)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -171,20 +171,20 @@ func (h *BandHandler) GetList(w http.ResponseWriter, r *http.Request) {
 
 	pageInt, err := strconv.Atoi(page)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	bands, err := h.BandDB.GetList(pageInt)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(bands)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 }

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -11,8 +10,6 @@ import (
 	"github.com/arturbaccarin/band-backend/internal/infra/database"
 	"github.com/arturbaccarin/band-backend/pkg/auth"
 )
-
-var ErrWrongPassword = errors.New("user or password is invalid")
 
 type UserHandler struct {
 	UserDB database.UserInterface
@@ -39,19 +36,19 @@ func (u UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&createUserParams)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	user, err := entity.NewUser(createUserParams.Name, createUserParams.Email, createUserParams.Password)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = u.UserDB.Create(*user)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -73,18 +70,18 @@ func (u UserHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&signInParams)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	user, err := u.UserDB.FindByEmail(signInParams.Email)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if !user.ValidatePassword(signInParams.Password) {
-		ErrorResponse(w, http.StatusBadRequest, ErrWrongPassword)
+		http.Error(w, "user or password is invalid", http.StatusForbidden)
 		return
 	}
 
@@ -92,7 +89,7 @@ func (u UserHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 
 	tokenString, err := auth.GenerateJWT(sub)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -102,7 +99,7 @@ func (u UserHandler) SignIn(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(accessToken)
 	if err != nil {
-		ErrorResponse(w, http.StatusBadRequest, err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 }
